@@ -11,7 +11,7 @@ public class AddressBookMain {
 		System.out.println("Welcome to Address Book Program");
 		int choice;
 		do {
-			System.out.println("1.Add Contact \n2.View Contact \n3.Edit Contact \n4.Exit");
+			System.out.println("1.Add Contact \n2.View Contact \n3.Edit Contact \n4.Delete Contact \n5.Exit");
 			choice = sc.nextInt();
 			sc.nextLine();
 			switch (choice) {
@@ -25,12 +25,15 @@ public class AddressBookMain {
 				addressBook.editContact();
 				break;
 			case 4:
+				addressBook.deleteContact();
+				break;
+			case 5:
 				break;
 			default:
 				System.out.println("Choose correct option from above mentioned option only!!");
 				break;
 			}
-		} while (choice != 4);
+		} while (choice != 5);
 		sc.close();
 	}
 }

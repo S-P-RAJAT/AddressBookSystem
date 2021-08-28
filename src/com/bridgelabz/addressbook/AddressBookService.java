@@ -104,4 +104,14 @@ public class AddressBookService {
 		}
 		System.out.println(firstBook.person);
 	}
+
+	public void deleteContact() {
+		if( firstBook==null) {
+			System.out.println("Nothing to Delete, Address Book is empty!");
+			return;
+		}
+		firstBook = null;
+		System.out.println("Contact is deleted!");
+		
+	}
 }
