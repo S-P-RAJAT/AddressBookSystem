@@ -11,7 +11,7 @@ public class AddressBookMain {
 		System.out.println("Welcome to Address Book Program\n");
 		int choice;
 		System.out.print("Enter the maximum number of contacts required: ");
-		AddressBookServiceIF addressBook = new AddressBookService(sc.nextInt());
+		AddressBookIF addressBook = new AddressBookImpl(sc.nextInt());
 		do {
 			System.out.println("1.Add Contact \n2.View Contact \n3.Edit Contact \n4.Delete Contact \n5.Exit");
 			choice = sc.nextInt();
