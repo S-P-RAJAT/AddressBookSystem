@@ -2,6 +2,8 @@ package com.bridgelabz.addressbook;
 
 public interface AddressBookIF {
 
+	public String getAddressBookName();
+	
 	public void addContact();
 
 	public void editContact();
@@ -12,4 +14,5 @@ public interface AddressBookIF {
 
 	public boolean isAddressBookEmpty();
 
+	public void openAddressbook();
 }
