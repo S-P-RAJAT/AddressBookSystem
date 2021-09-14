@@ -162,9 +162,7 @@ public class AddressBookImpl implements AddressBookIF {
 	@Override
 	public void viewContact() {
 
-		for (Contact contact : addressBook.contactList.values()) {
-			System.out.println(contact);
-		}
+		addressBook.contactList.values().stream().forEach(System.out::println);
 	}
 
 	@Override
