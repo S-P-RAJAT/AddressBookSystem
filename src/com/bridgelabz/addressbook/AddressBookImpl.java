@@ -28,25 +28,24 @@ public class AddressBookImpl implements AddressBookIF {
 	public void addContact() {
 
 		HashMap<String, String> map = new HashMap<>();
-		Consumer<String> getInput = p->{
-			System.out.print("\nEnter your "+ p+": ");
-			map.put(p,sc.nextLine());
+		Consumer<String> getInput = p -> {
+			System.out.print("\nEnter your " + p + ": ");
+			map.put(p, sc.nextLine());
 		};
 		getInput.accept("First Name");
 		getInput.accept("Last Name");
-		String name = map.get("First Name")+" "+ map.get("Last Name");
+		String name = map.get("First Name") + " " + map.get("Last Name");
 		if (addressBook.contactList.get(name) != null) {
 
 			System.out.println("Duplicate entry! Contact already exists");
-		}
-		else {
+		} else {
 
-			String[] attributes = {"Address","City","State","Zip Code","Phone Number","Email Id"};
+			String[] attributes = {"Address", "City", "State", "Zip Code", "Phone Number", "Email Id"};
 			Stream.of(attributes).forEach(getInput);
 
 			addressBook.contactList.put(name,
 					new Contact(map.get("First Name"), map.get("Last Name"), map.get("Address"), map.get("City"),
-							map.get("State"),Integer.parseInt(map.get("Zip Code")),
+							map.get("State"), Integer.parseInt(map.get("Zip Code")),
 							Long.parseLong(map.get("Phone Number")), map.get("Email Id")));
 
 			contactNamesByCity.computeIfAbsent(map.get("City"), k -> new LinkedList<Contact>());
@@ -75,77 +74,77 @@ public class AddressBookImpl implements AddressBookIF {
 			int choice = sc.nextInt();
 			sc.nextLine();
 			switch (choice) {
-			case 1:
-				System.out.println("Enter new First Name: ");
-				String newFirstName = sc.nextLine();
-				if (addressBook.contactList.get(newFirstName + " " + lastName) != null) {
-					System.out.println("Duplicate entry! Contact already exists");
-				} else {
-					addressBook.contactList.remove(name);
+				case 1:
+					System.out.println("Enter new First Name: ");
+					String newFirstName = sc.nextLine();
+					if (addressBook.contactList.get(newFirstName + " " + lastName) != null) {
+						System.out.println("Duplicate entry! Contact already exists");
+					} else {
+						addressBook.contactList.remove(name);
 
-					addressBook.contactList.put(newFirstName + " " + lastName,
-							new Contact(newFirstName, lastName, contact.getAddress(), contact.getCity(),
-									contact.getState(), contact.getZip(), contact.getPhoneNumber(),
-									contact.getEmail()));
-					System.out.println("Contact Details are added!\n"
-							+ addressBook.contactList.get(newFirstName + " " + lastName));
-				}
+						addressBook.contactList.put(newFirstName + " " + lastName,
+								new Contact(newFirstName, lastName, contact.getAddress(), contact.getCity(),
+										contact.getState(), contact.getZip(), contact.getPhoneNumber(),
+										contact.getEmail()));
+						System.out.println("Contact Details are added!\n"
+								+ addressBook.contactList.get(newFirstName + " " + lastName));
+					}
 
-				break;
-			case 2:
-				System.out.println("Enter new Last Name: ");
-				String newLastName = sc.nextLine();
-				if (addressBook.contactList.get(firstName + " " + newLastName) != null) {
-					System.out.println("Duplicate entry! Contact already exists");
-				} else {
-					addressBook.contactList.remove(name);
-					addressBook.contactList.put(firstName + " " + newLastName,
-							new Contact(firstName, newLastName, contact.getAddress(), contact.getCity(),
-									contact.getState(), contact.getZip(), contact.getPhoneNumber(),
-									contact.getEmail()));
-					System.out.println("Contact Details are added!\n"
-							+ addressBook.contactList.get(firstName + " " + newLastName));
-				}
-				break;
-			case 3:
-				System.out.println("Enter new Address: ");
-				String newAddress = sc.nextLine();
-				contact.setAddress(newAddress);
-				break;
-			case 4:
-				System.out.println("Enter new City: ");
-				String newCity = sc.nextLine();
-				contactNamesByCity.get(contact.getCity()).remove(contact);
-				contact.setCity(newCity);
-				contactNamesByCity.get(contact.getCity()).add(contact);
-				break;
-			case 5:
-				System.out.println("Enter new State: ");
-				String newState = sc.nextLine();
-				contactNamesByState.get(contact.getState()).remove(contact);
-				contact.setState(newState);
-				contactNamesByState.get(contact.getState()).add(contact);
+					break;
+				case 2:
+					System.out.println("Enter new Last Name: ");
+					String newLastName = sc.nextLine();
+					if (addressBook.contactList.get(firstName + " " + newLastName) != null) {
+						System.out.println("Duplicate entry! Contact already exists");
+					} else {
+						addressBook.contactList.remove(name);
+						addressBook.contactList.put(firstName + " " + newLastName,
+								new Contact(firstName, newLastName, contact.getAddress(), contact.getCity(),
+										contact.getState(), contact.getZip(), contact.getPhoneNumber(),
+										contact.getEmail()));
+						System.out.println("Contact Details are added!\n"
+								+ addressBook.contactList.get(firstName + " " + newLastName));
+					}
+					break;
+				case 3:
+					System.out.println("Enter new Address: ");
+					String newAddress = sc.nextLine();
+					contact.setAddress(newAddress);
+					break;
+				case 4:
+					System.out.println("Enter new City: ");
+					String newCity = sc.nextLine();
+					contactNamesByCity.get(contact.getCity()).remove(contact);
+					contact.setCity(newCity);
+					contactNamesByCity.get(contact.getCity()).add(contact);
+					break;
+				case 5:
+					System.out.println("Enter new State: ");
+					String newState = sc.nextLine();
+					contactNamesByState.get(contact.getState()).remove(contact);
+					contact.setState(newState);
+					contactNamesByState.get(contact.getState()).add(contact);
 
-				break;
-			case 6:
-				System.out.println("Enter new ZipCode: ");
-				int newZip = sc.nextInt();
-				contact.setZip(newZip);
-				break;
-			case 7:
-				System.out.println("Enter new Phone Number: ");
-				long newPhoneNum = sc.nextLong();
-				contact.setPhoneNumber(newPhoneNum);
-				break;
-			case 8:
-				System.out.println("Enter new Email Id: ");
-				String newEmail = sc.nextLine();
-				contact.setEmail(newEmail);
-				break;
-			case 9:
-				break;
-			default:
-				System.out.println("Choose right choice!!");
+					break;
+				case 6:
+					System.out.println("Enter new ZipCode: ");
+					int newZip = sc.nextInt();
+					contact.setZip(newZip);
+					break;
+				case 7:
+					System.out.println("Enter new Phone Number: ");
+					long newPhoneNum = sc.nextLong();
+					contact.setPhoneNumber(newPhoneNum);
+					break;
+				case 8:
+					System.out.println("Enter new Email Id: ");
+					String newEmail = sc.nextLine();
+					contact.setEmail(newEmail);
+					break;
+				case 9:
+					break;
+				default:
+					System.out.println("Choose right choice!!");
 			}
 		} else {
 			System.out.println("No contact with such name exists!");
@@ -157,7 +156,7 @@ public class AddressBookImpl implements AddressBookIF {
 	public void viewContact() {
 
 		System.out.println("\nSort by:\n 1)Name\t2)City\t3)State\t4)Zip");
-		switch (sc.nextInt()){
+		switch (sc.nextInt()) {
 			case 1:
 				sortedByName();
 				break;
@@ -170,9 +169,11 @@ public class AddressBookImpl implements AddressBookIF {
 			case 4:
 				sortedByZip();
 				break;
-			default: System.out.println("Please select correct option!");
+			default:
+				System.out.println("Please select correct option!");
 		}
 	}
+
 	@Override
 	public void sortedByName() {
 
@@ -181,30 +182,34 @@ public class AddressBookImpl implements AddressBookIF {
 				.sorted(Comparator.comparing(Contact::getFirstName))
 				.forEach(System.out::println);
 	}
+
 	@Override
 	public void sortedByCity() {
 
-		System.out.println("Sorted By First Name:");
+		System.out.println("Sorted By City Name:");
 		addressBook.contactList.values().stream()
 				.sorted(Comparator.comparing(Contact::getCity))
 				.forEach(System.out::println);
 	}
+
 	@Override
 	public void sortedByState() {
 
-		System.out.println("Sorted By First Name:");
+		System.out.println("Sorted By State Name:");
 		addressBook.contactList.values().stream()
 				.sorted(Comparator.comparing(Contact::getState))
 				.forEach(System.out::println);
 	}
+
 	@Override
 	public void sortedByZip() {
 
-		System.out.println("Sorted By First Name:");
+		System.out.println("Sorted By Zip Code:");
 		addressBook.contactList.values().stream()
 				.sorted(Comparator.comparing(Contact::getZip))
 				.forEach(System.out::println);
 	}
+
 	@Override
 	public void deleteContact() {
 
@@ -250,37 +255,37 @@ public class AddressBookImpl implements AddressBookIF {
 
 			switch (choice) {
 
-			case 1:
-				this.addContact();
-				break;
+				case 1:
+					this.addContact();
+					break;
 
-			case 2:
-				if (!this.isAddressBookEmpty()) {
+				case 2:
+					if (!this.isAddressBookEmpty()) {
 
-					this.viewContact();
-				}
-				break;
+						this.viewContact();
+					}
+					break;
 
-			case 3:
-				if (!this.isAddressBookEmpty()) {
+				case 3:
+					if (!this.isAddressBookEmpty()) {
 
-					this.editContact();
-				}
-				break;
+						this.editContact();
+					}
+					break;
 
-			case 4:
-				if (!this.isAddressBookEmpty()) {
+				case 4:
+					if (!this.isAddressBookEmpty()) {
 
-					this.deleteContact();
-				}
-				break;
+						this.deleteContact();
+					}
+					break;
 
-			case 5:
-				break;
+				case 5:
+					break;
 
-			default:
-				System.out.println("Choose correct option from above mentioned option only!!");
-				break;
+				default:
+					System.out.println("Choose correct option from above mentioned option only!!");
+					break;
 			}
 		} while (choice != 5);
 	}
