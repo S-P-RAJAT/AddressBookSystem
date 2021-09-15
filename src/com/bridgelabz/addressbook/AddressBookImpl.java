@@ -1,6 +1,8 @@
 package com.bridgelabz.addressbook;
 
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 public class AddressBookImpl implements AddressBookIF {
 
@@ -25,41 +27,36 @@ public class AddressBookImpl implements AddressBookIF {
 	@Override
 	public void addContact() {
 
-		System.out.println("Enter First Name: ");
-		String firstName = sc.nextLine();
-		System.out.println("Enter Last Name: ");
-		String lastName = sc.nextLine();
+		HashMap<String, String> map = new HashMap<>();
+		Consumer<String> getInput = p->{
+			System.out.print("\nEnter your "+ p+": ");
+			map.put(p,sc.nextLine());
+		};
+		getInput.accept("First Name");
+		getInput.accept("Last Name");
+		String name = map.get("First Name")+" "+ map.get("Last Name");
+		if (addressBook.contactList.get(name) != null) {
 
-		if (addressBook.contactList.get(firstName + " " + lastName) != null) {
 			System.out.println("Duplicate entry! Contact already exists");
-		} else {
-			System.out.println("Enter your Address: ");
-			String address = sc.nextLine();
-			System.out.println("Enter your City: ");
-			String city = sc.nextLine();
-			System.out.println("Enter your State: ");
-			String state = sc.nextLine();
-			System.out.println("Enter your Zip Code: ");
-			int zip = sc.nextInt();
-			System.out.println("Enter your Phone Number: ");
-			long phoneNum = sc.nextLong();
-			sc.nextLine();
-			System.out.println("Enter your email Id: ");
-			String email = sc.nextLine();
-			addressBook.contactList.put(firstName + " " + lastName,
-					new Contact(firstName, lastName, address, city, state, zip, phoneNum, email));
-			if (contactNamesByCity.get(city) == null) {
-				contactNamesByCity.put(city, new LinkedList<Contact>());
-			}
-			contactNamesByCity.get(city).add(addressBook.contactList.get(firstName + " " + lastName));
+		}
+		else {
 
-			if (contactNamesByState.get(state) == null) {
-				contactNamesByState.put(state, new LinkedList<Contact>());
-			}
-			contactNamesByState.get(state).add(addressBook.contactList.get(firstName + " " + lastName));
+			String[] attributes = {"Address","City","State","Zip Code","Phone Number","Email Id"};
+			Stream.of(attributes).forEach(getInput);
+
+			addressBook.contactList.put(name,
+					new Contact(map.get("First Name"), map.get("Last Name"), map.get("Address"), map.get("City"),
+							map.get("State"),Integer.parseInt(map.get("Zip Code")),
+							Long.parseLong(map.get("Phone Number")), map.get("Email Id")));
+
+			contactNamesByCity.computeIfAbsent(map.get("City"), k -> new LinkedList<Contact>());
+			contactNamesByCity.get(map.get("City")).add(addressBook.contactList.get(name));
+
+			contactNamesByState.computeIfAbsent(map.get("State"), k -> new LinkedList<Contact>());
+			contactNamesByState.get(map.get("State")).add(addressBook.contactList.get(name));
 
 			System.out
-					.println("Contact Details are added!\n" + addressBook.contactList.get(firstName + " " + lastName));
+					.println("Contact Details are added!\n" + addressBook.contactList.get(name));
 		}
 	}
 
