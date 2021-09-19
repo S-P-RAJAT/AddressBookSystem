@@ -1,12 +1,13 @@
 package com.bridgelabz.addressbook;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-public class AddressBookImpl implements AddressBookIF {
+public class AddressBookImpl implements AddressBookIF, Serializable {
 
-	AddressBook addressBook;
+	public AddressBook addressBook;
 	int index;
 	static final Scanner sc = AddressBookManager.sc;
 	static final HashMap<String, List<Contact>> contactNamesByCity = AddressBookManager.contactNamesByCity;
@@ -23,8 +24,24 @@ public class AddressBookImpl implements AddressBookIF {
 	public String getAddressBookName() {
 		return addressBook.name;
 	}
+	public HashMap<String, Contact> getContactList() { return addressBook.contactList;	}
+
 
 	@Override
+	public void setContact(HashMap<String, String> map){
+		String name = map.get("First Name") + " " + map.get("Last Name");
+		addressBook.contactList.put(name,
+				new Contact(map.get("First Name"), map.get("Last Name"), map.get("Address"), map.get("City"),
+						map.get("State"), Integer.parseInt(map.get("Zip Code")),
+						Long.parseLong(map.get("Phone Number")), map.get("Email Id")));
+
+		contactNamesByCity.computeIfAbsent(map.get("City"), k -> new LinkedList<Contact>());
+		contactNamesByCity.get(map.get("City")).add(addressBook.contactList.get(name));
+
+		contactNamesByState.computeIfAbsent(map.get("State"), k -> new LinkedList<Contact>());
+		contactNamesByState.get(map.get("State")).add(addressBook.contactList.get(name));
+
+	}
 	public void addContact() {
 
 		HashMap<String, String> map = new HashMap<>();
@@ -43,17 +60,7 @@ public class AddressBookImpl implements AddressBookIF {
 			String[] attributes = {"Address", "City", "State", "Zip Code", "Phone Number", "Email Id"};
 			Stream.of(attributes).forEach(getInput);
 
-			addressBook.contactList.put(name,
-					new Contact(map.get("First Name"), map.get("Last Name"), map.get("Address"), map.get("City"),
-							map.get("State"), Integer.parseInt(map.get("Zip Code")),
-							Long.parseLong(map.get("Phone Number")), map.get("Email Id")));
-
-			contactNamesByCity.computeIfAbsent(map.get("City"), k -> new LinkedList<Contact>());
-			contactNamesByCity.get(map.get("City")).add(addressBook.contactList.get(name));
-
-			contactNamesByState.computeIfAbsent(map.get("State"), k -> new LinkedList<Contact>());
-			contactNamesByState.get(map.get("State")).add(addressBook.contactList.get(name));
-
+			setContact(map);
 			System.out
 					.println("Contact Details are added!\n" + addressBook.contactList.get(name));
 		}
@@ -245,7 +252,7 @@ public class AddressBookImpl implements AddressBookIF {
 		}
 	}
 
-	public void openAddressbook() {
+	public void openAddressBook() {
 		int choice;
 		do {
 			System.out.println(

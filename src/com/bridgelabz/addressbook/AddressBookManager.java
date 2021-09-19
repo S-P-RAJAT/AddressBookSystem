@@ -2,31 +2,38 @@ package com.bridgelabz.addressbook;
 
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
+
+import static com.bridgelabz.addressbook.AddressBookIOService.WriteContactsToFile;
+import static com.bridgelabz.addressbook.AddressBookIOService.readData;
 
 public class AddressBookManager {
 	public static final Scanner sc = new Scanner(System.in);
-	public static final int bookCount[] = {0};
+	public static final int[] bookCount = {0};
 
-	public static HashMap<String, List<Contact>> contactNamesByCity = new HashMap<String, List<Contact>>();
-	public static HashMap<String, List<Contact>> contactNamesByState = new HashMap<String, List<Contact>>();
-	
+	public static HashMap<String, List<Contact>> contactNamesByCity;
+	public static HashMap<String, List<Contact>> contactNamesByState;
+	private static final String filePath ="/home/rajatsp/bridgelabz/day24/assignment/AddressBookSystem/";
+
+
 	public void start() {
 		boolean found = false;
 		System.out.println("Welcome to Address Book Program\n");
 		int choice, addressBookNumber = -1;
+		contactNamesByCity = new HashMap<>();
+		contactNamesByState = new HashMap<>();
 		List<AddressBookIF> addressBook = new ArrayList<>();
+		readData(addressBook);
+
 
 		do {
 			System.out.println(
 					"\n1.Create new Address Book \n2.Open Address Book \n3.Books List \n4.Search by City Name \n5.Search by State Name  \n6.Exit");
 			choice = sc.nextInt();
-			sc.nextLine();
 			switch (choice) {
 
 			case 1:
 
-
+					sc.nextLine();
 					System.out.print("Enter the address book name: ");
 					String addressBookName = sc.nextLine();
 					addressBook.add(new AddressBookImpl(addressBookName));
@@ -34,8 +41,10 @@ public class AddressBookManager {
 				break;
 
 			case 2:
+				sc.nextLine();
 				System.out.print("Enter the address book name: ");
-				Predicate<AddressBookIF> addressBookNamePredicate = n -> n.getAddressBookName().equals(sc.nextLine());
+				String bookName = sc.nextLine();
+				Predicate<AddressBookIF> addressBookNamePredicate = n -> n.getAddressBookName().equals(bookName);
 				AddressBookIF addressBookObject = addressBook.stream()
 						.filter(addressBookNamePredicate)
 						.findFirst()
@@ -44,7 +53,7 @@ public class AddressBookManager {
 				if (addressBookObject ==null) {
 					System.out.println("No book with such name exists!");
 				} else{
-					addressBookObject.openAddressbook();
+					addressBookObject.openAddressBook();
 				}
 				break;
 
@@ -56,6 +65,7 @@ public class AddressBookManager {
 				addressBook.stream().forEach(p -> System.out.println((++bookCount[0])+". "+p.getAddressBookName()));
 				break;
 			case 4:
+				sc.nextLine();
 				System.out.println("Enter the city name: ");
 				String city = sc.nextLine();
 
@@ -83,7 +93,7 @@ public class AddressBookManager {
 						int count = 0;
 						StringBuilder output = new StringBuilder();
 						for (Contact person : contactNamesByCity.get(city)) {
-							output.append(person.toString());
+							output.append(person.toString().concat("\n"));
 							count++;
 						}
 						System.out.println(count + " records found!\n" + output);
@@ -93,6 +103,7 @@ public class AddressBookManager {
 				break;
 
 			case 5:
+				sc.nextLine();
 				System.out.println("Enter the state name: ");
 				String state = sc.nextLine();
 				if (contactNamesByState.get(state) == null) {
@@ -120,7 +131,7 @@ public class AddressBookManager {
 						int count = 0;
 						StringBuilder output = new StringBuilder();
 						for (Contact person : contactNamesByState.get(state)) {
-							output.append(person.toString());
+							output.append(person.toString().concat("\n"));
 							count++;
 						}
 						System.out.println(count + " records found!\n" + output);
@@ -128,6 +139,10 @@ public class AddressBookManager {
 				}
 				break;
 			case 6:
+				for (AddressBookIF addressBookInstance :
+						addressBook) {
+					WriteContactsToFile(addressBookInstance.getContactList(),addressBookInstance.getAddressBookName());
+				}
 				break;
 
 			default:
